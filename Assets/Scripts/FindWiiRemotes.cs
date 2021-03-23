@@ -19,12 +19,37 @@ public class FindWiiRemotes : MonoBehaviour
 
         foreach (Wiimote remote in WiimoteManager.Wiimotes)
         {
-            remote.SendPlayerLED(true, false, true, false);
-            remote.RumbleOn = true;
-
-            Debug.Log(remote.RumbleOn);
+            StartCoroutine(Flash());
         }
     }
+
+    IEnumerator Flash()
+    {
+        while(true)
+        {
+
+            foreach (Wiimote remote in WiimoteManager.Wiimotes)
+            {
+                remote.SendPlayerLED(true, false, false, false);
+
+                yield return new WaitForSeconds(1);
+
+                remote.SendPlayerLED(false, true, false, false);
+
+                yield return new WaitForSeconds(1);
+
+                remote.SendPlayerLED(false, false, true, false);
+
+                yield return new WaitForSeconds(1);
+
+                remote.SendPlayerLED(false, false, false, true);
+
+                StartCoroutine(Flash());
+                break;
+            }
+        }
+    }
+
 
     public void FinishedWithWiimotes()
     {
